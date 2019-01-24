@@ -1,0 +1,30 @@
+{
+    "section":[
+        {"url":"../../../static/images/Home/con1.png","title":"MMall超市"},
+        {"url":"../../../static/images/Home/con2.png","title":"全球购"},
+        {"url":"../../../static/images/Home/con3.png","title":"MMall时尚"},
+        {"url":"../../../static/images/Home/con4.png","title":"MMall生鲜"},
+        {"url":"../../../static/images/Home/con5.png","title":"MMall到家"},
+        {"url":"../../../static/images/Home/con6.png","title":"充值缴费"},
+        {"url":"../../../static/images/Home/con7.png","title":"9.9拼"},
+        {"url":"../../../static/images/Home/con8.png","title":"领券"},
+        {"url":"../../../static/images/Home/con9.png","title":"省钱"},
+        {"url":"../../../static/images/Home/con10.png","title":"全部"}
+    ],
+    "product":[
+        {"url1":"../../../static/images/Home/product1.jpg","url2":"../../../static/images/Home/product2.jpg","text1":"玩3C","text2":"黑鲨新品大爆炸"},
+        {"url1":"../../../static/images/Home/product3.jpg","url2":"../../../static/images/Home/product4.jpg","text1":"MMall家电","text2":"家电狂欢京彩有你"},
+        {"url1":"../../../static/images/Home/product5.jpg","url2":"../../../static/images/Home/product6.jpg","text1":"MMall超市","text2":"超市大放价抢超值好货"},
+        {"url1":"../../../static/images/Home/product7.jpg","url2":"../../../static/images/Home/product8.jpg","text1":"爱家","text2":"家纺热卖部分低至9.9元"},
+        {"url1":"../../../static/images/Home/product9.jpg","url2":"../../../static/images/Home/product10.jpg","text1":"家有萌宝","text2":"低至五折"},
+        {"url1":"../../../static/images/Home/product11.jpg","url2":"../../../static/images/Home/product12.jpg","text1":"爱吃","text2":"9.9包邮，夏日也生动"}
+    ],
+    "shopping":[
+        {"url1":"../../../static/images/Home/shop1.jpg","url2":"../../../static/images/Home/shop2.jpg","text1":"智能家电馆","text2":"满减狂欢"},
+        {"url1":"../../../static/images/Home/shop3.jpg","url2":"../../../static/images/Home/shop4.jpg","text1":"珠宝馆","text2":"满减优惠"},
+        {"url1":"../../../static/images/Home/shop5.jpg","url2":"../../../static/images/Home/shop6.jpg","text1":"鞋靴箱包","text2":"低至五折"},
+        {"url1":"../../../static/images/Home/shop7.jpg","url2":"../../../static/images/Home/shop8.jpg","text1":"童装馆","text2":"春夏小萌娃"},
+        {"url1":"../../../static/images/Home/shop9.jpg","url2":"../../../static/images/Home/shop10.jpg","text1":"男装馆","text2":"时尚潮男pa"},
+        {"url1":"../../../static/images/Home/shop11.jpg","url2":"../../../static/images/Home/shop12.jpg","text1":"美装馆","text2":"时尚大牌抢抢抢"}
+    ]
+}
