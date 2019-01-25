@@ -16,51 +16,88 @@
         <div id="container">
             <Row>
                 <Col span="5" class="left">
-                   <ul class="list">
-                       <li v-for="(item,index) in category" :key="item.id" @click="change(index)">
-                           {{item}}
-                       </li>
-                   </ul>                 
+                   <Scroll  :height="height">
+                        <ul class="list">
+                            <li v-for="(item,index) in category" :key="item.id" @click="change(index)" :class="{tabFont:page==index}">
+                                {{item}}
+                            </li>
+                        </ul>
+                   </Scroll>                 
                 </Col>
                 <Col span="19" class="right">
-                    <div class="right-imgBox" v-if="data.data[page].mainImgUrl" >
-                        <img :src="data.data[page].mainImgUrl" alt="">
-                    </div>
-                    <div class="category-list" v-for="items in data.data[page].list" :key="items.id">
-                        <p class="list-title">{{items.title}}</p>                  
-                        <Row>
-                            <Col v-for="a in items.productList" :key="a.id" span="8">
-                                <img :src="a.imgUrl" alt="">
-                                <p>{{a.title}}</p>
-                            </Col>
-                        </Row>
-                    </div>
+                    <Scroll :height="height">
+                        <div class="right-imgBox" v-if="data.data[page].mainImgUrl" >
+                            <img :src="data.data[page].mainImgUrl" alt="">
+                        </div>
+                        <div class="category-list" v-for="items in data.data[page].list" :key="items.id">
+                            <p class="list-title">{{items.title}}</p>                                   
+                            <Row>
+                                <Col v-for="a in items.productList" :key="a.id" span="8">
+                                    <img :src="a.imgUrl" alt="">
+                                    <p>{{a.title}}</p>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Scroll>
                 </Col>
             </Row>
         </div>
+        <nav-buttom></nav-buttom>
     </div>
 </template>
 
 <script>
 import data from './data'
+import navButtom from '../navButtom/navButtom.vue'
 export default {
     data() {
         return {
             page:0,
-            data:data
+            data:data,
+            fullHeight:0,
         }
     }, 
+    computed: {
+        height(){
+          this.fullHeight-=(52+68)
+          return this.fullHeight
+        }
+    },
+    components:{
+        navButtom,
+    },
     created() {     
         this.category=this.$store.state.a.category
-        console.log(data.data)
     },
     methods: {
         change(index){
             this.page = index;
-        }
+        },
     },
+    mounted() {
+      const that = this
+      window.onresize = () => {
+        return (() => {
+          window.fullHeight = document.documentElement.clientHeight
+          this.fullHeight = window.fullHeight
+        })()
+      }    
+    },
+     watch: {
+      fullHeight (val) {
+        if(!this.timer) {
+          this.fullHeight = val
+          this.timer = true
+          let that = this
+          setTimeout(function (){
+            that.timer = false
+          },400)
+        }
+      }
+    }
+
 }
-</script>
+</script> 
 
 <style lang="scss" scoped>
     header{
@@ -69,9 +106,14 @@ export default {
             line-height: 32px;
         }
     }
+    .tabFont{
+        color:red !important;
+        background: white !important;
+    }
     #container{
         .left{
             .list{
+                background-color:#f8f8f8; 
                 list-style: none;
                 padding: 0;
                 margin: 0;
@@ -80,6 +122,9 @@ export default {
                     height: 45px;
                     line-height: 45px;
                     text-align: center;
+                    background: #F7F7F7;
+                    color:black;
+                    font-weight: 400;
                 }
             }
         }
