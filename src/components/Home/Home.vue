@@ -4,17 +4,18 @@
       <header class="home-header">
         <!-- 头部左边 -->
         <div class="header-text">
-          <Icon type="ios-menu" size="27" />
+         <router-link to="./category"> <Icon type="ios-menu" size="27" /></router-link> 
         </div>
          <!-- 头部中间 -->
         <div class="header-search">
-            <Input v-model="value" placeholder="Enter something...">
-                <Icon type="ios-search" slot="suffix"/>
-            </Input>
+            <span style="color:red;">新春爆款</span>
+            <span>|</span>
+            <Icon type="ios-search" slot="suffix" size="18"/>
+            <router-link to="./search"><span>家电新春返厂特惠</span></router-link>
         </div> 
          <!-- 头部右边 -->
         <div class="header-text">
-           <span>登陆</span>
+          <router-link to="./login"><span>登陆</span></router-link>
         </div>
       </header>
       <!-- header end -->
@@ -35,7 +36,7 @@
       <!-- banner end-->
       <!-- content 第一部分-->
       <div class="content-section">
-        <div class="section-box" v-for="obj in contentList" :key="obj.id">
+        <div class="section-box" v-for="(obj,index) in contentList" :key="obj.id" @click=selectCategory(index)>
             <img :src="obj.url">
             <p>{{obj.title}}</p>
         </div>
@@ -74,11 +75,16 @@
         </div>
       </div>    
       <!-- content end -->
+      <!-- 底部占位 -->
+      <div class="seizeSeat"></div>
+      <!-- 底部 -->
+     <nav-buttom></nav-buttom>
   </div>
 </template>
 
 <script>
 // 导入Swiper
+import navButtom from '../navButtom'
 import Swiper from 'swiperjs' 
 import 'swipercss' 
 
@@ -111,14 +117,20 @@ export default {
         }  
     })
   },methods:{
-     
+      //第一部分点击跳转
+      selectCategory(index){
+        console.log(index)
+        this.$router.push('./product-list?'+index)
+     }
+  },components : {
+    navButtom : navButtom
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-$padding:15px;
+$padding:13px 10px;
 $font:16px;
 .home{
   //头部
@@ -131,22 +143,38 @@ $font:16px;
     left: 0;
     top: 0;
     width: 100%;
-    height:65px;
+    height:60px;
     color: white;
     padding: $padding;
     z-index: 10000;
     display: flex;
     justify-content: space-between;
     text-align: center;
-    font-size: $font;
     transition: all 1s;
     .header-search{
+      padding: 4px 10px;
+      margin-top: 5px;
       width: 65%;
+      height: 80%;
+      background-color: white;
+      color:gray;
+      border-radius: 20px;
+      text-align: left;
+      font-size:12px;
+      a{
+        span{
+          color:gray;
+          font-size: 8px;
+        }
+      }
     }
     .header-text{
       width: 15%;
       color: white;
       line-height: 35px;
+      a{
+        color: white;
+      }
     }
   }
   //轮播
@@ -212,6 +240,11 @@ $font:16px;
           }
         }
       }
+  }
+  //底部占位
+  .seizeSeat{
+    width: 100%;
+    height: 68px;
   }
 }
 </style>
