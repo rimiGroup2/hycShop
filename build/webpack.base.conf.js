@@ -30,6 +30,7 @@ module.exports = {
       '@': resolve('src'),
       'swiperjs':'swiper/dist/js/swiper.js',
       'swipercss':'swiper/dist/css/swiper.css',
+      '@static':resolve('static'),
     }
   },
   module: {
