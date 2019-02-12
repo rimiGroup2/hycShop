@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <category></category> -->
     <!-- <navButtom></navButtom> -->
-    <router-view/>
+   <router-view></router-view>
   </div>
 </template>
 
@@ -17,7 +17,4 @@ export default {
 }
 </script>
 <style>
-#app {
-
-}
 </style>
