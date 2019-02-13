@@ -2,7 +2,7 @@
     <div>
         <Header title="订单列表"></Header>
         <div class="search">
-            <Input search placeholder="商品名称/商品编号/订单号" />
+            <Input search placeholder="搜索订单号" />
         </div>
         <div class="order-tab">
             <Row>

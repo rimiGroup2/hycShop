@@ -7,7 +7,7 @@ import updatePassword from '@/components/User/update-password.vue'
 import updateInformation from '@/components/User/update-information.vue'
 import shipping from '@/components/User/shipping.vue'
 import orderList from '@/components/Orderlist/Orderlist.vue'
-
+import orderDetails from '@/components/Orderlist/Order-details.vue'
 
 Vue.use(Router)
 
@@ -47,6 +47,11 @@ export default new Router({
       path:'/orderList',
       name:'orderList',
       component:orderList
+    },
+    {
+      path:'/orderDetails',
+      name:'orderDetails',
+      component:orderDetails
     }
   ]
 })
