@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <!-- <category></category> -->
-    <!-- <navButtom></navButtom> -->
-   <router-view></router-view>
+    <transition name="slide-right">
+      <router-view class="router-view"></router-view>
+    
+    </transition>
   </div>
 </template>
 

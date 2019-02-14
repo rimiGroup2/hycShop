@@ -9,8 +9,11 @@
                 <span v-if="order_state && order_state == 3">已完成</span>
             </p>
             <p>订单编号:<span> {{order_number}}</span></p>
-            <div v-if="order_state && order_state == 0">
-                <Button type="error" long class="pay-button" @click="toPay">去支付</button>
+            <div v-if="order_state && order_state == 0 && order[0].order_payPrice">
+                <Button type="error" long class="pay-button" @click="topay = true">去支付</button>
+                 <Modal v-model="topay" title="Title" :loading="loading" @on-ok="toPay">
+                    <p>订单总价为<span type="error">￥{{order[0].order_payPrice}}</span>,确定购买吗</p>
+                </Modal>
                 <Button long class="cancel-button" @click="cancel = true">取消订单</button>
                 <Modal v-model="cancel" title="Title" :loading="loading" @on-ok="toCancel">
                  <p>您确定要取消订单吗</p>
@@ -18,8 +21,7 @@
             </div>
         </div>
         <div class="user-address" v-if="order && address && order[0].order_payPrice">
-            <p >订单金额:￥{{order[0].order_payPrice}}</p>
-            
+            <p >订单金额:￥{{order[0].order_payPrice}}</p>            
             <p >收货地址:{{address.address_area}}{{address.address_content}}</p>
             <p >收货人:{{address.address_name}}</p>
             <p > 联系电话:{{address.address_phone}}</p>
@@ -61,6 +63,7 @@ export default {
             user_id:"",
             cancel:false,
             loading:true,
+            topay:false,
         }
     },
     created:function(){
@@ -109,18 +112,32 @@ export default {
             })
         },
         toPay(){
-            console.log(123)
+            let sql = `update \`order\` set order_state=1 where order_number= '${this.order_number}'`
+            Ajax(sql).then(res=>{
+                if(res){
+                  return
+                }                
+            })
+            .then(()=>{
+                setTimeout(() => {
+                    this.topay = false;
+                    this.$router.go(0)
+                }, 2000);
+            })
         },
         toCancel(){
             let sql = `update \`order\` set order_state=2 where order_number= '${this.order_number}'`
             
             Ajax(sql).then(res=>{
                 if(res){
-                  this.cancel = false;
-                  alert('取消成功!')
-                  this.$router.go(0)
-                }
-                
+                  return
+                }                
+            })
+            .then(()=>{
+                setTimeout(() => {
+                    this.cancel = false;
+                    this.$router.go(0)
+                }, 2000);
             })
         }
 

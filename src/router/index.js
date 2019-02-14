@@ -14,7 +14,7 @@ import Updateinfo from '@/components/Update/Updateinfo'
 import Updateadress from '@/components/Update/Updateadress'
 import user from '@/components/User/User'
 import Footprint from '@/components/Footprint/Footprint'
-import payOrder from '@/components/PayOrder/pay-order'
+import userLike from '@/components/UserLike/user-like'
 Vue.use(Router)
 
 export default new Router({
@@ -90,9 +90,9 @@ export default new Router({
       component:Footprint,
     },
     {
-      path:'/payOrder',
-      name:'payOrder',
-      component:payOrder
+      path:'/userLike',
+      name:'userLike',
+      component:userLike
     }
   ]
 })
