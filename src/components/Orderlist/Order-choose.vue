@@ -21,15 +21,15 @@
                             </div>
                         </div>
                         <div class="item-bottom">
-                            <div v-for="goods in order[index]" :key="goods.id">
-                                <Row>
-                                    <Col span="6">
-                                        <img :src="goods.product_pic" alt="" class="product_pic">
-                                    </Col>
-                                    <Col span="18">
-                                        <p class="product-name">{{goods.product_name}}</p>
-                                        <p class="product-num">x{{goods.product_num}}</p>
-                                    </Col>
+                            <div v-for="goods in order[index]" :key="goods.index">
+                                <Row>                             
+                                        <Col span="6" >
+                                            <img :src="goods.product_pic" alt="" class="product_pic">
+                                        </Col>
+                                        <Col span="16" push="2">
+                                            <p class="product-name">{{goods.product_name}}</p>
+                                            <p class="product-num">x{{goods.product_num}}</p>
+                                        </Col>                                    
                                 </Row>
                             </div> 
                         </div>                       
@@ -49,28 +49,31 @@ export default {
             orderList:[],
             order:[],
             height:"",
+            user_id:""
         }
     },
     created:function(){
+        this.getUserId()
         this.getData()
     },
     methods:{
       getData(){
-        this.tag = this.index
+        this.tag = parseInt(this.index)
+        var userId = this.user_id;
         var sql;
         //根据传来的index改变sql语句
         switch(this.tag){
             case 0:
-                sql = `SELECT * FROM \`order\` WHERE order_uid =3`
+                sql = `SELECT * FROM \`order\` WHERE order_uid =${userId}`
                 break;
             case 1:
-                sql = `SELECT * FROM \`order\` WHERE order_uid = 3 AND order_state = 0`
+                sql = `SELECT * FROM \`order\` WHERE order_uid = ${userId} AND order_state = 0`
                 break;
             case 2:
-                sql =`SELECT * FROM \`order\` WHERE order_uid = 3 AND order_state = 1`
+                sql =`SELECT * FROM \`order\` WHERE order_uid = ${userId} AND order_state = 1`
                 break;
             case 3:
-                sql =`SELECT * FROM \`order\` WHERE order_uid = 3 AND order_state = 3`
+                sql =`SELECT * FROM \`order\` WHERE order_uid = ${userId} AND order_state = 3`
                 break;  
         }
         //获取这个用户的订单号
@@ -83,18 +86,26 @@ export default {
             })
             //获取这个订单号下面的商品
             .then(res=>{
-                var c;
+                var c = [];
                 res.map(function(item){
                    var a = item.order_number
-                   var sql1 = `SELECT * FROM (SELECT * FROM order_product WHERE order_number = ${a}) AS o JOIN product ON o.product_id = product.product_id`
-                   c = $.ajax({url:'http://118.24.87.17/getMysql.php?sendsql='+sql1,async:false}).responseJSON                  
+                   var sql1 = `SELECT * FROM (SELECT * FROM order_product WHERE order_number = '${a}') AS o JOIN product ON o.product_id = product.product_id`
+                   var b = $.ajax({url:'http://118.24.87.17/getMysql.php?sendsql='+sql1,async:false}).responseJSON
+                   b.map(function(item){
+                       item.product_pic=item.product_pic.split("@")[0]
+                   })   
+                   c.push(b)                          
                 })
-                this.order.push(c)             
+              
+                this.order = c          
             })
         })     
       },
       ToPay(number){
-          this.$router.push({name:'orderDetails',params:{orderNumber:number}})
+          this.$router.push({path:'/orderDetails',query:{orderNumber:number}})
+      },
+      getUserId(){
+          this.user_id =  window.sessionStorage.userId
       }
 
     },
@@ -102,7 +113,6 @@ export default {
         index(val){
             this.tag = this.index
             this.getData()
-            console.log(this.orderList)
         }
     },
     mounted() {
@@ -162,8 +172,8 @@ export default {
             font-size:14px;
             font-weight: 400;
             .product_pic{
-                width:50px;
-                height: 50px;
+                width:100%;
+                height: 100%;
             }
             .product-name{
                 box-sizing: border-box;

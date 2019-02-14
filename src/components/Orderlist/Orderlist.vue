@@ -30,8 +30,12 @@ export default {
     },
     methods:{        
         tab(index){
+            this.$router.push({path:'/orderList',query:{tag:index}})
             this.tag = index
         }
+    },
+    created(){
+        this.tag = this.$route.query.tag
     }
 }
 </script> 

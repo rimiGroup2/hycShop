@@ -48,7 +48,7 @@
 
 <script>
 import data from './data'
-import navButtom from '../navButtom/navButtom.vue'
+import navButtom from '../navButtom.vue'
 export default {
     data() {
         return {

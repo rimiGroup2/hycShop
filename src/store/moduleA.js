@@ -4,19 +4,9 @@ const moduleA = {
         ajaxData:"",
     },
     mutations:{
-        getData(state,res){
-            state.ajaxData = res;
-        }
+        
     },
     actions:{
-        Ajax(context,sql){
-            axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
-             .then((res)=>{
-                 context.commit('getData',res.data)
-             }).catch((err)=>{
-                 return '接受失败';
-             })             
-        }
     }
 }
 
