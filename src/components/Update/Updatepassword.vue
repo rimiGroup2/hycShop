@@ -99,12 +99,12 @@ export default {
         this.oldPassword=''
       }else{
         let sql="update `user` set user_password='"+this.newPassword+"' where user_name='"+this.username+"'"
-        axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql).then((res)=>{
-          if(confirm("你确定要修改密码吗？")){
+        if(confirm("你确定要修改密码吗？")){
+          axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql).then((res)=>{        
             this.$router.push('./login')
-            window.sessionStorage.clear();
-          }          
-        })
+            window.sessionStorage.clear();                  
+          })
+        }   
       }
     }
   }
