@@ -50,11 +50,11 @@ export default {
     },
     userpasswordNext(){
         let sql="update `user` set user_password='"+this.userpassword+"' where user_name='"+this.username+"'";
-        axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql).then((res)=>{
-            if(confirm("你确定要重置吗？")){
-               this.$router.push('./login')
-            } 
-        })
+        if(confirm("你确定要重置吗？")){
+            axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql).then((res)=>{ 
+               this.$router.push('./login')    
+            })
+        } 
     }
   }
 }
