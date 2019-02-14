@@ -27,9 +27,6 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('loadList');
-    this.list = this.$store.state.testList
-    console.log(this.list)
   },
   mounted () {
     $('.hello h1').click(function(){
@@ -39,6 +36,10 @@ export default {
       autoplay: true,
       loop:true
     })
+    console.log(this.$store.state.test);
+    this.$store.dispatch('loadList');
+    this.list = this.$store.state.testList
+    console.log(this.list)
   }
 }
 </script>

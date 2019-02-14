@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     strict : true,
     state : {
-        testList : []
+        testList : [],
+        test : 1
     },
     getters: {
 
