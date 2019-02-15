@@ -10,7 +10,7 @@
             @change.native="$emit('itemselect')"></Checkbox>
         </div>
         <img :src="productItem.product_pic.split('@')[0]" alt="">
-        <div>
+        <div class="itemRight">
             <div class="itemInfo">
                 <p class="itemName">{{productItem.product_name}}</p>
                 <p class="itemDesc">{{productItem.product_desc}}</p>
@@ -179,7 +179,8 @@ export default {
             height: 100px;
             width: 100px;
         }
-        .itemInfo{
+        .itemRight{
+          .itemInfo{
             text-align: left;
             width: 100%;
             .itemName{
@@ -195,7 +196,9 @@ export default {
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
             }
+          }
         }
+        
         .itemNum{
             height: 35px;
             display: flex;

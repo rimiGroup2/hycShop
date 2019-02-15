@@ -8,7 +8,7 @@
                 <Icon type="ios-arrow-back" size="30"/>
               </Col>
               <Col span="17">
-                <Input v-model="searchInput" prefix="ios-search" />
+                <Input v-model="searchInput" prefix="ios-search" @click.native="search"/>
               </Col>
               <Col span="4">
                 <Icon type="ios-more" size="30"/>
@@ -26,7 +26,7 @@
             </ul>
           </div> 
       </header>
-      <div class="productContainer">
+      <div class="productContainer" v-if="productList.length!=0">
         <!-- 商品项目 -->
           <div class="productItem" v-for="item,index in productList" :key="item.id" @click="toProductdetail(index)">
             <Row :gutter="16">
@@ -45,6 +45,10 @@
             </Row>
           </div>
       </div>
+      <div v-else class="noProduct">
+        <Icon type="ios-planet-outline" />
+        <p>找不到相关商品，请重新搜索</p>
+      </div>
   </div>
 </template>
 
@@ -59,14 +63,27 @@ export default {
     }
   },
   created () {
-    var kind = window.location.href.split('?')[1].split('=')[1];
-    var sql = "select * from product where product_kind="+kind;
-    // console.log(sql)
-    axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
-    .then((res) => {
-      // console.log(res);
-      this.productList = res.data;
-    })
+    var search = this.$route.query.search;
+    var kind = this.$route.query.kind;
+    console.log(search)
+    console.log(kind)
+    if(search){
+      var sql = "select * from product where product_name like '%"+search+"%'";
+      axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
+      .then((res) => {
+        // console.log(res);
+        this.productList = res.data;
+      })
+    }else{
+      var sql = "select * from product where product_kind="+kind;
+      // console.log(sql)
+      axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
+      .then((res) => {
+        // console.log(res);
+        this.productList = res.data;
+      })
+    }
+    
   },
   mounted () {
     $('.orderList ul li').click(function(){
@@ -74,6 +91,9 @@ export default {
     })
   },
   methods:{
+    search(){
+      this.$router.push({path:'../Search'})
+    },
     goBack(){
       this.$router.go(-1)
     },
@@ -212,6 +232,22 @@ export default {
           }
           
         }
+      }
+    }
+    .noProduct{
+      width: 300px;
+      height: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -150px;
+      margin-left: -150px;
+      color: orangered;
+      i {
+        font-size: 150px;
+      }
+      p{
+        font-size:20px;
       }
     }
   }

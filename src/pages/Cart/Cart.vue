@@ -4,13 +4,15 @@
       <div class="cartContainer">
           <div class="nodata" v-if="cartList.length==0">
               <Icon type="ios-cart-outline" />
-              <p>购物车中没有东西，去逛逛吧</p>
+              <p>购物车中空空如也，去逛逛吧</p>
           </div>
           <cart-item v-for="item,index in cartList" 
            :productItem='item' :key='index.id' 
            @itemselect="itemChecked(index)" @del="del" :index='index'>
           </cart-item>
           <!-- <cart-item></cart-item> -->
+          
+                <recommend></recommend>
       </div>
       <Row class="cartFooter">
         <Col span="6">
@@ -24,6 +26,7 @@
         <i-button type="primary" size="large" @click="toOrder">去结算</i-button>
         </Col>
       </Row>
+       <nav-buttom></nav-buttom>
       <Modal
         v-model="delAlert"
         @on-ok="ok"
@@ -79,7 +82,7 @@
                 :productItem='item' :key='index.id' 
                 @itemselect="itemChecked(index)"></order-item>
             </div>
-            <Row class="cartFooter">
+            <Row class="cartFooter order">
                 <Col span="6">
                 </Col>
                 <Col span="12">
@@ -96,6 +99,8 @@
 
 <script>
 import headerbar from '../../components/Headerbar'
+import navButtom from '../../components/navButtom.vue'
+import recommend from '../Recommends/recommend'
 import cartitem from './Cartitem'
 import orderitem from './Orderitem'
 
@@ -116,14 +121,26 @@ export default {
            orderShowflag:false,
         // 默认收货地址
            defaultAddress:false,
+           userId:null
       }     
   },
   components : {
       headerBar : headerbar,
       cartItem : cartitem,
-      orderItem:orderitem
+      orderItem:orderitem,
+      navButtom:navButtom,
+      recommend:recommend
   },
   methods : {
+        //判断是否登录
+        isLogin(){
+            if(!window.sessionStorage.getItem("islogin")){
+                this.$router.push('./login') 
+            }else{
+                this.userId=sessionStorage.getItem('userId');
+                // console.log(this.userId)
+            }
+        },   
         //全选
         selectAll(){
             this.checkAll = !this.checkAll;
@@ -149,7 +166,6 @@ export default {
                 });
             }else{
                 this.orderShowflag=true;
-                
             }
         },
         //点击刪除   
@@ -180,7 +196,7 @@ export default {
             // 生成订单
             var sql = "insert into `order` (order_number,order_uid,order_payPrice,order_state) values("
                         +"CONCAT('HYC',DATE_FORMAT(now(), '%y%m%d%H%i%s'),lpad(round(round(rand(),2)*1000),2,'0')),"
-                        +"1,"
+                        +this.userId+","
                         +this.totPrice+",0)"
             axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
             .then(() => {
@@ -227,8 +243,9 @@ export default {
         }
   },
   created (){
+      this.isLogin()
     //   获取购物车列表
-      var sql = 'select * from product as p join cart as c on c.cart_productId=p.product_id where c.cart_userId=1';
+      var sql = 'select * from product as p join cart as c on c.cart_productId=p.product_id where c.cart_userId='+this.userId;
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
           res.data.forEach(function(item){
@@ -239,7 +256,7 @@ export default {
 
     //   获取默认地址
       sql = "select * from address where address_isdefault = 1 and address_userId = "
-          + "1";
+          + this.userId;
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
           this.defaultAddress = res.data[0]
@@ -263,20 +280,20 @@ export default {
     }
     #cart{
         .cartContainer{
-            min-height: 888px;
+            min-height: 700px;
             padding-top: 55px;
             background-color: #efefef;
-            padding-bottom: 50px;
+            padding-bottom: 20px;
             .nodata{
-                width: 300px;
-                height: 300px;
+                width: 200px;
+                height: 200px;
                 display: block;
-                position: absolute;
+                // position: absolute;
                 // background-color: #fff;
-                top: 50%;
-                left: 50%;
-                margin-top: -150px;
-                margin-left: -150px;
+                // top: 0;
+                // left: 50%;
+                // margin-left: -100px;
+                margin: 50px auto;
                 color: orangered;
                 font-size: 100px;
                 p{
@@ -289,10 +306,10 @@ export default {
             // height: 50px;
             padding: 10px;
             position: fixed;
-            bottom: 0;
+            bottom: 57px;
             background-color: #fff;
             line-height: 30px;
-            z-index: 200;
+            z-index: 1000;
             .ivu-col-span-6,
             .ivu-col-span-12{
                 margin-top: 4px;
@@ -303,6 +320,9 @@ export default {
             .ivu-col-span-12{
                 text-align: right;
                 margin-top: -1px;
+            }
+            &.order{
+                bottom: 0;
             }
         }
         .totPrice{

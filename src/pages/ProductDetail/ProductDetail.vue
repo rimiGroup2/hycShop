@@ -128,7 +128,7 @@ export default {
           likeIndex:null
       }
   },components:{
-      counter:counter
+      counter:counter,
   },
   created (){
     // 获取商品信息  
@@ -137,17 +137,21 @@ export default {
       .then((res) => {
           this.productItem = res.data[0];
           this.productPic = res.data[0].product_pic.split('@')
+          //   添加足迹
+            this.footprintList(this.productItem)
       })
 
     // 获取购物车数量
-      var sql = 'select count(*) as number from cart where cart_userId=1';
+      var sql = 'select count(*) as number from cart where cart_userId='+sessionStorage.getItem("userId");
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
           this.cartNum = parseInt(res.data[0].number);
       })
 
       // 商品是否存在
-        var sql =  'select * from cart where cart_productId = '+this.$route.query.productId;
+        var sql =  'select * from cart where cart_productId = '
+                +this.$route.query.productId +'and cart_userId='
+                +sessionStorage.getItem('userId');
         axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
         .then((res) => {
             // 如果不存在，数量为0
@@ -160,10 +164,10 @@ export default {
         })
 
     //获取喜欢
-    sql = "select user_like from `user` where user_id=1"
+    sql = "select user_like from `user` where user_id = "+sessionStorage.getItem("userId")
     axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
     .then((res) => {
-        this.likeList =  res.data[0].user_like.split(',')
+        this.likeList = res.data[0].user_like.split(',')
         for(var i=0;i<this.likeList.length;i++){
             if(this.likeList[i] == this.$route.query.productId){
                 this.isLike=true
@@ -171,6 +175,8 @@ export default {
             }
         }
     }) 
+    
+    
   },
   mounted(){
     //  轮播图
@@ -222,9 +228,10 @@ export default {
             // 不存在，直接插入数据
             if(this.origNum  == 0){
                 var sql = "insert into cart (cart_userId,cart_productId,cart_productNumber) values("
-                            +1+",'"
+                            +sessionStorage.getItem("userId")+",'"
                             +this.productItem.product_id+"','"
                             +this.productNum+"')"
+                // console.log(sql)
                 axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
                 .then((res) => {
                     this.cartNum++;
@@ -234,7 +241,11 @@ export default {
                 })
             }else{
                 // 存在，修改数据
-                var sql = "update cart set cart_productNumber="+(this.origNum+this.productNum)+" where cart_userId = 1 and cart_productId="+this.productItem.product_id
+                var sql = "update cart set cart_productNumber="
+                        +(this.origNum+this.productNum)+" where cart_userId = "
+                        +sessionStorage.getItem('userId') +" and cart_productId="
+                        +this.productItem.product_id
+                // console.log(sql)
                 axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
                 .then((res) => {
                     $('.popContainer').animate({bottom:"-500px"});
@@ -243,7 +254,9 @@ export default {
                 })
             }
             // 更新数量
-            var sql =  'select * from cart where cart_productId = '+this.$route.query.productId;
+            var sql =  'select * from cart where cart_productId = '
+                    +this.$route.query.productId+'and cart_userId = '
+                    +window.sessionStorage.getItem("userIds");
             axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
             .then((res) => {
                 var origin = res.data[0].cart_productNumber
@@ -263,10 +276,35 @@ export default {
                 this.likeIndex=this.likeList.length-1
             }
             var sql = "update user set user_like = '"
-                +this.likeList.join(',')+"' where user_id = 1"
+                +this.likeList.join(',')+"' where user_id = "+window.sessionStorage.getItem("userId")
             axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
-        }
-
+        },
+        // 添加足迹
+        footprintList(proItem){
+            var footList=sessionStorage.getItem('footData');
+            var footArr = JSON.parse(footList)
+            if(footList){
+                var sameFlag=null;
+                for(var i=0;i<footArr.length;i++){
+                    if(footArr[i].product_id==proItem.product_id){
+                        sameFlag=i
+                    }
+                }
+                if(sameFlag!=null){
+                    // console.log('same')
+                    footArr.splice(sameFlag,1)
+                    footArr.unshift(proItem)
+                    sessionStorage.setItem('footData',JSON.stringify(footArr))
+                }else{
+                    footArr.unshift(proItem)
+                    sessionStorage.setItem('footData',JSON.stringify(footArr))
+                }
+            }else{
+                footList=[]
+                footList.push(proItem)
+                sessionStorage.setItem('footData',JSON.stringify(footList))
+            }
+        },  
     }
 }
 </script>

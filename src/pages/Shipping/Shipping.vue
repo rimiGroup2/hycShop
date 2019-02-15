@@ -185,7 +185,7 @@ export default {
           })
           this.addressList[index].address_isdefault=1;
 
-          var sql = 'update address set address_isdefault = 0'
+          var sql = 'update address set address_isdefault = 0 where address_userId='+window.sessionStorage.getItem('userId')
           axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
           var sql = 'update address set address_isdefault = 1 where address_id='+this.addressList[index].address_id;
           axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql);
@@ -223,17 +223,19 @@ export default {
                         this.$Modal.warning({title: '联系电话格式不正确，请重新输入'});
                         this.newAdd.phone = '';
                     }else{
+                        var noAdd = this.addressList.length==0?1:0;
                         var sql = "insert into address (address_userId,address_name,address_area,address_code,address_phone,address_content,address_isdefault) values("
-                            +1 +",'"
+                            +window.sessionStorage.getItem('userId') +",'"
                             +this.newAdd.address_name +"','"
                             +this.newAdd.address_area +"','"
                             +this.newAdd.address_code +"','"
                             +this.newAdd.address_phone+"','"
-                            +this.newAdd.address_content +"',0)";
+                            +this.newAdd.address_content +"',"
+                            +noAdd+")";
                         axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
                         .then((res) => {
                         })
-                        this.newAdd['address_isdefault']=0;
+                        this.newAdd['address_isdefault']=noAdd;
                         this.addressList.push(this.newAdd)
                         this.newAdd = {
                             address_name:null,
@@ -308,7 +310,7 @@ export default {
             })
         }
   },created (){
-       var sql = 'select * from address where address_userId = 1';
+       var sql = 'select * from address where address_userId = '+sessionStorage.getItem('userId');
         axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
         .then((res)=>{
             this.addressList = res.data;
