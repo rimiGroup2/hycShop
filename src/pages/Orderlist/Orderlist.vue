@@ -28,12 +28,14 @@ export default {
         Header,
         OrderChoose,
     },
-    methods:{        
+    methods:{
+        //切换tab         
         tab(index){
             this.$router.push({path:'/orderList',query:{tag:index}})
             this.tag = index
         }
     },
+    //获取传来的tag值
     created(){
         this.tag = this.$route.query.tag
     }

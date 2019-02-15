@@ -75,12 +75,17 @@ export default {
         }
     },
     created:function(){
+        //获取订单号和用户id
         this.getNumber()
+        //获取订单下的商品信息
         this.getProduct()
+        //获取用户地址信息
         this.getAdress()
+        //获取订单的状态
         this.getOrder()          
     },
     methods:{
+        //获取订单号和用户id
         getNumber(){
             if(this.$route.query.orderNumber){
                 this.order_number = this.$route.query.orderNumber
@@ -90,6 +95,7 @@ export default {
             }
             this.user_id = window.sessionStorage.userId
         },
+        //获取订单下的商品信息
         getProduct(){
             var number = this.order_number
             var sql =`SELECT * FROM product JOIN (SELECT * FROM order_product WHERE order_number ='${number}') AS o ON product.product_id = o.product_id`
@@ -100,6 +106,7 @@ export default {
                 this.product = res;
             })
         },
+        //获取用户地址信息
         getAdress(){
             var userId = this.user_id
             console.log(this.user_id)
@@ -110,6 +117,7 @@ export default {
                 // console.log(this.user_id)
             })
         },
+        //获取订单的状态
         getOrder(){
             var number = this.order_number
             var sql =`SELECT * FROM \`order\` WHERE order_number ='${number}' `
@@ -119,6 +127,7 @@ export default {
                 this.order_state = res[0].order_state
             })
         },
+        //支付更改状态为待收货
         toPay(){
             let sql = `update \`order\` set order_state=1 where order_number= '${this.order_number}'`        
             Ajax(sql).then(res=>{
@@ -133,6 +142,7 @@ export default {
                 }, 2000);
             })
         },
+        //取消订单，状态更改为已取消
         toCancel(){
             let sql = `update \`order\` set order_state=2 where order_number= '${this.order_number}'`        
              Ajax(sql).then(res=>{
@@ -147,6 +157,7 @@ export default {
                 }, 2000);
             })
         },
+        //确认收货，状态更改为已完成
         toConfirm(){
             let sql = `update \`order\` set order_state=3 where order_number= '${this.order_number}'`        
              Ajax(sql).then(res=>{
@@ -167,6 +178,7 @@ export default {
     components:{
         Header:Header,
     },
+    //获取html的高度
     mounted(){
          this.height = (document.documentElement.screenHeight-126) + 'px'
          console.log()

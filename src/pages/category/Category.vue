@@ -62,19 +62,19 @@ export default {
     components:{
         navButtom,
     },
+    //获取商品列表
     created() {     
         this.category=this.$store.state.a.category
     },
     methods: {
+        //tab切换
         change(index){
             this.page = index;
         },
+        //跳转商品页
         ToDetail(){
             var product_kind = this.page + 1
             this.$router.push({path:'/productlist',query:{kind:product_kind}})
-        },
-        search(e){
-            this.$router.push({path:'/productlist',query:{search:e}})
         },
         // 返回
         goBack(){
@@ -85,6 +85,7 @@ export default {
             this.$router.push({path:'../Search'})
         }
     },
+    //获取html的高度，list的行高
     mounted() {
       const that = this
       window.fullHeight = document.documentElement.clientHeight
