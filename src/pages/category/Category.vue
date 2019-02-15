@@ -6,7 +6,7 @@
                 <Icon type="ios-arrow-back" size="24"/>
               </Col>
               <Col span="19">
-                <Input prefix="ios-search"  :autoture="true" class="head-serach"/>
+                <Input search  :autoture="true" class="head-serach" @on-search="search($event)"/>
               </Col>
               <Col span="2" class="icon-right">
                 <Icon type="ios-more" size="30"/>
@@ -16,20 +16,20 @@
         <div id="container">
             <Row>
                 <Col span="5" class="left">
-                   <Scroll  :height="height">
-                        <ul class="list">
-                            <li v-for="(item,index) in category" :key="item.id" @click="change(index)" :class="{tabFont:page==index}">
+                   <Scroll  :height="fullHeight">
+                        <ul class="list" :style="{'height':fullHeight+'px'}">
+                            <li v-for="(item,index) in category" :key="item.id" @click="change(index)" :class="{tabFont:page==index}" :style="{'line-height':listHeight}">
                                 {{item}}
                             </li>
                         </ul>
                    </Scroll>                 
                 </Col>
                 <Col span="19" class="right">
-                    <Scroll :height="height">
-                        <div class="right-imgBox" v-if="data.data[page].mainImgUrl" >
-                            <img :src="data.data[page].mainImgUrl" alt="">
+                    <Scroll :height="fullHeight">
+                        <div class="right-imgBox" v-if="categoryData.data[page].mainImgUrl" >
+                            <img :src="categoryData.data[page].mainImgUrl" alt="">
                         </div>
-                        <div class="category-list" v-for="items in data.data[page].list" :key="items.id">
+                        <div class="category-list" v-for="items in categoryData.data[page].list" :key="items.id" @click="ToDetail">
                             <p class="list-title">{{items.title}}</p>                                   
                             <Row>
                                 <Col v-for="a in items.productList" :key="a.id" span="8">
@@ -48,21 +48,17 @@
 
 <script>
 import data from './data'
-import navButtom from '../navButtom.vue'
+import navButtom from '@/components/navButtom.vue'
 export default {
     data() {
         return {
             page:0,
-            data:data,
+            categoryData:data,
             fullHeight:0,
+            category:"",
+            listHeight:"",
         }
     }, 
-    computed: {
-        height(){
-          this.fullHeight-=(52+68)
-          return this.fullHeight
-        }
-    },
     components:{
         navButtom,
     },
@@ -73,15 +69,33 @@ export default {
         change(index){
             this.page = index;
         },
+        ToDetail(){
+            var product_kind = this.page + 1
+            this.$router.push({path:'/productlist',query:{kind:product_kind}})
+        },
+        search(e){
+            this.$router.push({path:'/productlist',query:{search:e}})
+        }
     },
     mounted() {
       const that = this
+      window.fullHeight = document.documentElement.clientHeight
+      this.fullHeight = window.fullHeight - 120
       window.onresize = () => {
         return (() => {
           window.fullHeight = document.documentElement.clientHeight
           this.fullHeight = window.fullHeight
         })()
-      }    
+      } 
+      this.listHeight = (this.fullHeight / this.category.length)+"px"
+        window.onresize = () => {
+        return (() => {
+            console.log(this.listHeight)
+            window.fullHeight = document.documentElement.clientHeight
+            this.fullHeight = window.fullHeight
+            this.listHeight = (this.fullHeight / this.category.length)+"px"
+        })()
+      } 
     },
      watch: {
       fullHeight (val) {
@@ -117,10 +131,14 @@ export default {
                 list-style: none;
                 padding: 0;
                 margin: 0;
+                position: relative;
+                left: 0;
+                top: 0;
+                display: flex;
+                flex-direction: column;
                 li{
                     width: 100%;
-                    height: 45px;
-                    line-height: 45px;
+                    line-height: 60px;
                     text-align: center;
                     background: #F7F7F7;
                     color:black;

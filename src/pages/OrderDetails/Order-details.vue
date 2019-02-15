@@ -1,18 +1,24 @@
 <template>
-    <div>
+    <div class="background" :style="{'height':height}">
         <Header title="订单详情"></Header>      
         <div class="order-info">
             <p>订单状态:
                 <span v-if="order_state && order_state == 0" style="color:red">未支付</span>
-                <span v-if="order_state && order_state == 1">待发货</span>
+                <span v-if="order_state && order_state == 1">
+                    待发货
+                    <Button type="error"  class="confirm-button" @click="confirm = true">确认收货</button>
+                    <Modal v-model="confirm" title="Title" :loading="loading" @on-ok="toConfirm">
+                    <p>确认收货吗</p>
+                    </Modal>
+                </span>
                 <span v-if="order_state && order_state == 2">已取消</span>
                 <span v-if="order_state && order_state == 3">已完成</span>
             </p>
             <p>订单编号:<span> {{order_number}}</span></p>
             <div v-if="order_state && order_state == 0 && order[0].order_payPrice">
                 <Button type="error" long class="pay-button" @click="topay = true">去支付</button>
-                 <Modal v-model="topay" title="Title" :loading="loading" @on-ok="toPay">
-                    <p>订单总价为<span type="error">￥{{order[0].order_payPrice}}</span>,确定购买吗</p>
+                <Modal v-model="topay" title="Title" :loading="loading" @on-ok="toPay">
+                 <p>订单一共<span style="color:#ed4014">￥{{order[0].order_payPrice}}</span>,确认支付吗？</p>
                 </Modal>
                 <Button long class="cancel-button" @click="cancel = true">取消订单</button>
                 <Modal v-model="cancel" title="Title" :loading="loading" @on-ok="toCancel">
@@ -21,7 +27,7 @@
             </div>
         </div>
         <div class="user-address" v-if="order && address && order[0].order_payPrice">
-            <p >订单金额:￥{{order[0].order_payPrice}}</p>            
+            <p >订单金额:￥{{order[0].order_payPrice}}</p>          
             <p >收货地址:{{address.address_area}}{{address.address_content}}</p>
             <p >收货人:{{address.address_name}}</p>
             <p > 联系电话:{{address.address_phone}}</p>
@@ -50,7 +56,7 @@
     </div>
 </template>
 <script>
-import Header from '../User/user-header.vue'
+import Header from '@/components/user-header.vue'
 import Ajax from '@/Ajax/ajax.js'
 export default {
     data(){
@@ -62,8 +68,10 @@ export default {
             order_state:"",
             user_id:"",
             cancel:false,
-            loading:true,
             topay:false,
+            confirm:false,
+            loading:true,
+            height:"",
         }
     },
     created:function(){
@@ -112,31 +120,44 @@ export default {
             })
         },
         toPay(){
-            let sql = `update \`order\` set order_state=1 where order_number= '${this.order_number}'`
+            let sql = `update \`order\` set order_state=1 where order_number= '${this.order_number}'`        
             Ajax(sql).then(res=>{
                 if(res){
-                  return
-                }                
+                  return   
+                }            
             })
             .then(()=>{
                 setTimeout(() => {
-                    this.topay = false;
-                    this.$router.go(0)
+                  this.topay = false;
+                  this.$router.go(0)
                 }, 2000);
             })
         },
         toCancel(){
-            let sql = `update \`order\` set order_state=2 where order_number= '${this.order_number}'`
-            
-            Ajax(sql).then(res=>{
+            let sql = `update \`order\` set order_state=2 where order_number= '${this.order_number}'`        
+             Ajax(sql).then(res=>{
                 if(res){
-                  return
-                }                
+                  return   
+                }            
             })
             .then(()=>{
                 setTimeout(() => {
-                    this.cancel = false;
-                    this.$router.go(0)
+                  this.cancel = false;
+                  this.$router.go(0)
+                }, 2000);
+            })
+        },
+        toConfirm(){
+            let sql = `update \`order\` set order_state=3 where order_number= '${this.order_number}'`        
+             Ajax(sql).then(res=>{
+                if(res){
+                  return   
+                }            
+            })
+            .then(()=>{
+                setTimeout(() => {
+                  this.confirm = false;
+                  this.$router.go(0)
                 }, 2000);
             })
         }
@@ -145,14 +166,25 @@ export default {
     },
     components:{
         Header:Header,
+    },
+    mounted(){
+         this.height = (document.documentElement.screenHeight-126) + 'px'
+         console.log()
+        window.onresize=()=>{
+         this.height = (document.documentElement.screenHeight-126) + 'px'
+        }
     }
 }
 </script>
 <style lang="scss" scoped>
+    .background{
+        background-color:#eee; 
+    }
     .order-info{
         padding: 15px;
         font-size:15px;
         font-weight: 400;
+        background-color:white; 
         p{  
             color:#999;
             span{
@@ -165,17 +197,23 @@ export default {
             margin: 7px 0px;
             font-size:15px;
         }
+        .confirm-button{
+            height: 100%;
+            float: right;
+        }
     }
 
     .user-address{
         margin: 10px 0;
         padding: 15px;
         font-size: 15px;
+        background-color:white; 
     }
 
     .product{
         padding: 15px;
         position: relative;
+        background-color:white; 
         ul{
             list-style: none;
         }

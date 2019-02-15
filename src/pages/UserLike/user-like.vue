@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-import Header from '../User/user-header.vue'
+import Header from '@/components/user-header.vue'
 import Ajax from '@/Ajax/ajax.js'
 export default {
     data() {
@@ -56,11 +56,10 @@ export default {
             })
             .then(product=>{
                 this.product = product
-                console.log(this.product)
             })
         },
         toDetail(id){
-            console.log(id)
+            this.$router.push({path:'/ProductDetail',query:{productId:id}})
         }
     },
     mounted() {
@@ -77,7 +76,7 @@ export default {
     }
     .product-item{
         padding: 10px;
-        margin: 5px 0 0 0;
+        margin: 1px 0 0 0;
         background-color:#fff; 
         box-sizing: border-box;
     }

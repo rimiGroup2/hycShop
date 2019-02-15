@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Header from '../User/user-header.vue'
+import Header from '@/components/user-header.vue'
 import OrderChoose from './Order-choose.vue'
 export default {
     data(){

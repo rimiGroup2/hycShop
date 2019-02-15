@@ -1,10 +1,9 @@
 <template>
-    <div>
-        <div class="order-item" :style="{'height':height}">
+    <div class="order-item" >
             <div v-if="orderList.length == 0" class="no-order" :style="{'line-height':height}">您暂时还没有订单！</div>
             <div v-else>
                 <ul>
-                    <li v-for="(item,index) in orderList" :key="item.id" class="border-list">
+                    <li v-for="(item,index) in orderList" :key="item.id" class="border-list" @click="ToDetails(item.order_number)">
                         <div class="item-top">
                              <p>订单号:{{item.order_number}}</p>                            
                         </div>
@@ -14,7 +13,10 @@
                                     未支付
                                     <Button type="error" ghost class="payButtom" @click="ToPay(item.order_number)">去支付</Button>
                                 </span>
-                                <span v-else-if="item.order_state == 1">待收货</span>
+                                <span v-else-if="item.order_state == 1">
+                                    待收货
+                                    <Button type="error" ghost class="payButtom" @click="ToPay(item.order_number)">确认收货</Button>
+                                </span>
                                 <span v-else-if="item.order_state == 2">已取消</span>
                                 <span v-else-if="item.order_state == 3">已完成</span>
                                 <p>总价:￥{{item.order_payPrice}}</p>
@@ -36,7 +38,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
     </div>
 </template>
 <script>
@@ -106,6 +107,9 @@ export default {
       },
       getUserId(){
           this.user_id =  window.sessionStorage.userId
+      },
+      ToDetails(number){
+          this.$router.push({path:'/orderDetails',query:{orderNumber:number}})
       }
 
     },
@@ -136,9 +140,13 @@ export default {
         }
         .border-list{
             padding: 15px;
-            background-color:white;
             box-sizing: border-box;
             margin-top: 20px;
+            background-color:white; 
+
+        }
+        .border-list:nth-of-type(1){
+            margin: 0 !important;
         }
         .item-top{
             font-size:14px;
