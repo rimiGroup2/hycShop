@@ -48,7 +48,7 @@ export default {
                     return Promise.reject()
                 }else{
                     var productId = res[0].user_like.split(",")
-                    console.log(123)
+                    // console.log(123)
                     return productId
                 }
             })

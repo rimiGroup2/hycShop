@@ -158,6 +158,7 @@ export default {
     }
     .user-menu{
         margin-top:20px; 
+        padding-top: 5px;
         height: 75px;
         background-color: white;
         text-align: center;

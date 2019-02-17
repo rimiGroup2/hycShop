@@ -1,5 +1,6 @@
 <template>
   <div class="productList">
+      <!-- 搜索栏 -->
       <header>
           <Row :gutter="6">
               <Col span="3" @click.native="goBack">
@@ -77,6 +78,7 @@ export default {
       var sql = "select * from product where product_name like '%"+search+"%'";
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
+        // console.log(res);
         this.productList = res.data;
         setTimeout(function(){
           self.loadingFlag=false          
@@ -84,14 +86,17 @@ export default {
       })
     }else{
       var sql = "select * from product where product_kind="+kind;
+      // console.log(sql)
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
+        // console.log(res);
         this.productList = res.data;
         setTimeout(function(){
           self.loadingFlag=false          
         },1500)
       })
     }
+    
   },
   mounted () {
     $('.orderList ul li').click(function(){

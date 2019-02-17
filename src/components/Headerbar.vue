@@ -36,7 +36,7 @@ header{
     position: fixed;
     background-color: #fff;
     top: 0;
-    z-index: 200;
+    z-index: 2000;
     box-shadow: 0 -2px 10px #000;
     .headerTitle{
         font-size: 20px;

@@ -89,7 +89,7 @@
                 合计：<span class="totPrice">{{totPrice}}</span>
                 </Col>
                 <Col span="6" class="sum">
-                <i-button type="primary" size="large" @click="checkOrder">确认订单</i-button>
+                    <i-button type="primary" size="large" @click="checkOrder" :disabled="!defaultAddress">确认订单</i-button>
                 </Col>
             </Row>
           </div>
@@ -124,6 +124,7 @@ export default {
            defaultAddress:false,
            userId:null,
            loadingFlag:true
+
       }     
   },
   components : {
@@ -141,6 +142,7 @@ export default {
                 this.$router.push('./login') 
             }else{
                 this.userId=sessionStorage.getItem('userId');
+                // console.log(this.userId)
             }
         },   
         //全选
@@ -161,6 +163,7 @@ export default {
             this.checkedItems = this.cartList.filter(function(item){
                 return item.ischecked
             })
+            // console.log(this.checkedItems)
             if(this.checkedItems.length == 0){
                 this.$Modal.info({
                     title: '你还未选中商品'
@@ -223,7 +226,7 @@ export default {
                     axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql+data)
                 })
             })
-            
+
             // 删除购物车项目
             sql = "delete from cart where "
             for(var i=0;i<this.checkedItems.length;i++){
@@ -231,7 +234,6 @@ export default {
                 i==this.checkedItems.length-1?sql+=';':sql+=' or ';
             }
             axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
-            this.$router.push({path:'/Pay',query:{orderNum:this.orderNum}})
         }
   },
   computed: {
@@ -397,8 +399,7 @@ export default {
         .slide-enter,.slide-leave-to{
             transform: translate3d(100%,0,0);
         }
-
-    .spinContainer{
-        z-index: 1000;
-    }
+        .spinContainer{
+            z-index: 1000;
+        }
 </style>
