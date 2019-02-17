@@ -22,10 +22,9 @@
         </div>
         <div class="user-menu">
             <Row>
-                <Col span="6"><p><Icon type="ios-card"  size="24" class="iconfont"/></p>代付款</Col>
-                <Col span="6"><p><Icon type="md-car" size="24" class="iconfont"/></p> 待收货</Col>
-                <Col span="6"><p><Icon type="ios-checkmark-circle-outline" size="24" class="iconfont"/></p>已完成</Col>
-                <Col span="6"><p><Icon type="md-clipboard" size="24" class="iconfont"/></p>全部订单</Col>
+                <Col span="6" v-for="(item,index) in userMenu" :key="index"  >
+                    <p @click="ToOrderList(index)"><Icon :type="item.icon"  size="24" class="iconfont"/></p>{{item.title}}
+                </Col>
             </Row>
         </div>
         <div class="user-favorite">
@@ -58,13 +57,23 @@ export default {
             useremail: window.sessionStorage.getItem("useremail"),
             name:'设置昵称',
             count:0,
-            likeCounter:0
+            likeCounter:0,
+            userMenu:[
+                {icon:"md-clipboard",title:"全部订单"},
+                {icon:"ios-card",title:"待付款"},
+                {icon:"md-car",title:"待收货"},
+                {icon:"ios-checkmark-circle-outline",title:"已完成"}
+            ]
         }
     },created(){
         var userId = window.sessionStorage.userId
         var sql = `SELECT user_like FROM \`user\` WHERE user_id = `+userId
         Ajax(sql).then(res=>{
-            this.likeCounter = res[0].user_like.split(',').length
+            if(typeof(res[0]) != undefined && res[0].user_like !=""){
+                this.likeCounter = res[0].user_like.split(',').length
+            }else{
+                this.likeCounter = 0
+            }
         })
     },    
     mounted(){
@@ -97,6 +106,9 @@ export default {
         // 关注的商品
         toLike(){
             this.$router.push('/userLike')
+        },
+        ToOrderList(index){
+            this.$router.push({path:'/orderList',query:{tag:index}})
         }
 
     }

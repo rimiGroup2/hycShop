@@ -58,6 +58,7 @@ export default {
         this.getData()
     },
     methods:{
+        //获取当前id下的订单以及订单里的商品信息
       getData(){
         this.tag = parseInt(this.index)
         var userId = this.user_id;
@@ -102,23 +103,28 @@ export default {
             })
         })     
       },
+      //跳转到订单详情页面
       ToPay(number){
           this.$router.push({path:'/orderDetails',query:{orderNumber:number}})
       },
+      //获取当前用户id
       getUserId(){
           this.user_id =  window.sessionStorage.userId
       },
+      //跳转到订单详情页面 
       ToDetails(number){
           this.$router.push({path:'/orderDetails',query:{orderNumber:number}})
       }
 
     },
     watch:{
+        //监听index 根据改变的index切换查询的数据
         index(val){
             this.tag = this.index
             this.getData()
         }
     },
+    //获取html的高度
     mounted() {
          this.height = (document.documentElement.clientHeight-126) + 'px'
         window.onresize=()=>{
