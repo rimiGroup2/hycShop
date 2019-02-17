@@ -3,7 +3,7 @@
     <!-- header -->
     <div class="header">
       <Icon type="ios-arrow-back" size="24" @click="goBack()" class="icon-left"/>
-      <span>MMall登录</span>
+      <span>登录</span>
     </div>
     <!-- content  -->
     <div class="page">

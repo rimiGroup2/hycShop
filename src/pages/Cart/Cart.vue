@@ -11,8 +11,8 @@
            @itemselect="itemChecked(index)" @del="del" :index='index'>
           </cart-item>
           <!-- <cart-item></cart-item> -->
-          
-                <recommend></recommend>
+          <recommend></recommend>
+          <loading :flag="loadingFlag"></loading>
       </div>
       <Row class="cartFooter">
         <Col span="6">
@@ -103,6 +103,7 @@ import navButtom from '../../components/navButtom.vue'
 import recommend from '../Recommends/recommend'
 import cartitem from './Cartitem'
 import orderitem from './Orderitem'
+import loading from '../../components/Loading'
 
 export default {
   name: 'Cart',
@@ -121,7 +122,8 @@ export default {
            orderShowflag:false,
         // 默认收货地址
            defaultAddress:false,
-           userId:null
+           userId:null,
+           loadingFlag:true
       }     
   },
   components : {
@@ -129,7 +131,8 @@ export default {
       cartItem : cartitem,
       orderItem:orderitem,
       navButtom:navButtom,
-      recommend:recommend
+      recommend:recommend,
+      loading:loading
   },
   methods : {
         //判断是否登录
@@ -138,7 +141,6 @@ export default {
                 this.$router.push('./login') 
             }else{
                 this.userId=sessionStorage.getItem('userId');
-                // console.log(this.userId)
             }
         },   
         //全选
@@ -159,7 +161,6 @@ export default {
             this.checkedItems = this.cartList.filter(function(item){
                 return item.ischecked
             })
-            // console.log(this.checkedItems)
             if(this.checkedItems.length == 0){
                 this.$Modal.info({
                     title: '你还未选中商品'
@@ -222,7 +223,7 @@ export default {
                     axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql+data)
                 })
             })
-
+            
             // 删除购物车项目
             sql = "delete from cart where "
             for(var i=0;i<this.checkedItems.length;i++){
@@ -230,6 +231,7 @@ export default {
                 i==this.checkedItems.length-1?sql+=';':sql+=' or ';
             }
             axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
+            this.$router.push({path:'/Pay',query:{orderNum:this.orderNum}})
         }
   },
   computed: {
@@ -244,12 +246,16 @@ export default {
   },
   created (){
       this.isLogin()
+      var self = this;
     //   获取购物车列表
       var sql = 'select * from product as p join cart as c on c.cart_productId=p.product_id where c.cart_userId='+this.userId;
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
           res.data.forEach(function(item){
-              item.ischecked=false
+              item.ischecked=false;
+              setTimeout(function(){
+                self.loadingFlag=false          
+              },1500)
           })
           this.cartList = res.data;
       })
@@ -391,4 +397,8 @@ export default {
         .slide-enter,.slide-leave-to{
             transform: translate3d(100%,0,0);
         }
+
+    .spinContainer{
+        z-index: 1000;
+    }
 </style>

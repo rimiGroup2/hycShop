@@ -44,7 +44,7 @@
                 <span @click="userLogout">退出登录</span>
             </div>
         </div>
-        <p class="mmall">MMall</p>
+        <p class="mmall">汇一城</p>
     </div>
   </div>
 </template>

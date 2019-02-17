@@ -5,6 +5,7 @@ import ProductList from '@/pages/ProductList/ProductList'
 import ProductDetail from '@/pages/ProductDetail/ProductDetail'
 import Cart from '@/pages/Cart/Cart'
 import Shipping from '@/pages/Shipping/Shipping'
+import Pay from '@/pages/Pay/Pay'
 
 // jiang
 import Home from '@/pages/Home/Home'
@@ -28,6 +29,7 @@ import userLike from '@/pages/UserLike/user-like'
 Vue.use(Router)
 
 export default new Router({
+  mode : 'history',
   routes: [
     {
       path:'/',
@@ -168,6 +170,14 @@ export default new Router({
       component:userLike,
       meta: {
           index: 2
+      }
+    },
+    {
+      path:'/pay',
+      name:'pay',
+      component:Pay,
+      meta: {
+          index: 4
       }
     }
   ]

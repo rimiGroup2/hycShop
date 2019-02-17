@@ -1,7 +1,5 @@
 <template>
   <div class="productList">
-      <!-- <h1>{{msg}}</h1> -->
-      <!-- 搜索栏 -->
       <header>
           <Row :gutter="6">
               <Col span="3" @click.native="goBack">
@@ -26,6 +24,7 @@
             </ul>
           </div> 
       </header>
+      <!-- list container  -->
       <div class="productContainer" v-if="productList.length!=0">
         <!-- 商品项目 -->
           <div class="productItem" v-for="item,index in productList" :key="item.id" @click="toProductdetail(index)">
@@ -45,45 +44,54 @@
             </Row>
           </div>
       </div>
+      <!-- no Data -->
       <div v-else class="noProduct">
         <Icon type="ios-planet-outline" />
         <p>找不到相关商品，请重新搜索</p>
       </div>
+      <!-- loading -->
+      <loading :flag="loadingFlag"></loading>
   </div>
 </template>
 
 <script>
+import loading from '../../components/Loading'
 export default {
   name: 'ProductList',
   data () {
     return {
       searchInput:"",
       productList : [],
-      orderBypriceflag:false
+      orderBypriceflag:false,
+      loadingFlag : true
     }
+  },
+  components:{
+    loading:loading
   },
   created () {
     var search = this.$route.query.search;
     var kind = this.$route.query.kind;
-    console.log(search)
-    console.log(kind)
+    var self = this;
     if(search){
       var sql = "select * from product where product_name like '%"+search+"%'";
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
-        // console.log(res);
         this.productList = res.data;
+        setTimeout(function(){
+          self.loadingFlag=false          
+        },1500)
       })
     }else{
       var sql = "select * from product where product_kind="+kind;
-      // console.log(sql)
       axios.get('http://118.24.87.17/getMysql.php?sendsql='+sql)
       .then((res) => {
-        // console.log(res);
         this.productList = res.data;
+        setTimeout(function(){
+          self.loadingFlag=false          
+        },1500)
       })
     }
-    
   },
   mounted () {
     $('.orderList ul li').click(function(){
@@ -91,6 +99,13 @@ export default {
     })
   },
   methods:{
+    hideLoading(){
+      this.loadingFlag=true;
+      var self = this;
+      setTimeout(function(){
+        self.loadingFlag=false;
+      },1000)
+    },
     search(){
       this.$router.push({path:'../Search'})
     },
@@ -102,18 +117,21 @@ export default {
         return x.product_id - y.product_id;
       })
       $('.orderList ul li:nth-child(4) i').css("color","#2c3e50")
+      this.hideLoading()
     },
     orderBysale(){
       this.productList.sort(function(x,y){
         return y.product_sale - x.product_sale;
       })
       $('.orderList ul li:nth-child(4) i').css("color","#2c3e50")
+      this.hideLoading()
     },
     orderBystorage(){
       this.productList.sort(function(x,y){
         return y.product_storage - x.product_storage;
       })
       $('.orderList ul li:nth-child(4) i').css("color","#2c3e50")
+      this.hideLoading()
     },
     orderByprice(){
       if(this.orderBypriceflag){
@@ -131,6 +149,7 @@ export default {
         $('.orderList ul li:nth-child(4) i:nth-child(2)').css("color","#2c3e50")
         $('.orderList ul li:nth-child(4) i:nth-child(1)').css("color","orangered")
       }
+      this.hideLoading()
     },
     toProductdetail(index){
       // console.log(this.productList[index].product_id);

@@ -30,15 +30,11 @@
         </div>
         <div class="user-favorite">
             <Row>
-                <Col span="8" @click.native="toLike">
+                <Col span="12" @click.native="toLike">
                     <h4>{{likeCounter}}</h4>
                     <p>关注的商品</p>
                 </Col>
-                <Col span="8">
-                    <h4>0</h4>
-                   <p>关注的店铺</p>
-                </Col>
-                <Col span="8">
+                <Col span="12">
                     <h4>{{ count }}</h4>
                     <router-link to="./footprint">我的足迹</router-link>
                 </Col>

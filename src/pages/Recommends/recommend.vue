@@ -1,6 +1,6 @@
 <template>
   <div class="recommendInfo">
-        <p class="recommend-title">为你推荐</p>
+        <p class="recommend-title">—— 为你推荐 ——</p>
         <div class="recommend-list">
             <recommend-info :prop="listInfo"></recommend-info>
         </div>
@@ -35,7 +35,6 @@ $padding: 10px;
 .recommendInfo{
     width:100%;
     height: auto;
-    margin-top: 18px;
     .recommend-title{
         width: 100%;
         height: 40px;
@@ -44,17 +43,20 @@ $padding: 10px;
         line-height: 40px;
         background: #fff;
         box-sizing: border-box;
-        font-size: 12px;
+        font-size: 14px;
+        margin-top: 18px;
+        text-align: center
     }
     .recommend-list{     
         display: flex;
         flex-shrink: 0;
         flex-wrap: wrap;
         width: 100%;
-        margin: 18px 0;
+        // margin: 18px 0;
         padding-bottom: 10px;
         box-sizing: border-box;
         background: #fff;
+        border-top: 1px solid #ccc;
     }
 }
 </style>
